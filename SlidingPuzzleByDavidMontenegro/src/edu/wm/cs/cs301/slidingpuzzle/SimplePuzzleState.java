@@ -1,5 +1,7 @@
 package edu.wm.cs.cs301.slidingpuzzle;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Arrays;
 
 public class SimplePuzzleState implements PuzzleState {
@@ -45,17 +47,9 @@ public class SimplePuzzleState implements PuzzleState {
 		return this.board[row][column];
 	}
 	
-	public void setParent(PuzzleState par) {
-		this.parent = par;
-	}
-	
 	@Override
 	public PuzzleState getParent() {
 		return this.parent;
-	}
-
-	public void setOperation(Operation op) {
-		this.operation = op;
 	}
 	
 	@Override
@@ -70,6 +64,8 @@ public class SimplePuzzleState implements PuzzleState {
 
 	@Override
 	public PuzzleState move(int row, int column, Operation op) {
+		if(this.isEmpty(row, column))
+			return null;
 		int dim = this.board.length;
 		SimplePuzzleState state = new SimplePuzzleState(dim);
 		for (int i = 0; i < dim; i++) {
@@ -86,7 +82,9 @@ public class SimplePuzzleState implements PuzzleState {
 					state.parent = this;
 					state.operation = op;
 					state.pathLength = this.pathLength + 1;
-				}		
+				}	
+				else
+					return null;
 				break;
 			case MOVEDOWN:
 				if(row + 1 < dim && this.isEmpty(row + 1, column)) {
@@ -96,7 +94,9 @@ public class SimplePuzzleState implements PuzzleState {
 					state.parent = this;
 					state.operation = op;
 					state.pathLength = this.pathLength + 1;
-				}		
+				}
+				else
+					return null;
 				break;
 			case MOVELEFT:
 				if(column - 1 >= 0 && this.isEmpty(row, column - 1)) {
@@ -106,7 +106,9 @@ public class SimplePuzzleState implements PuzzleState {
 					state.parent = this;
 					state.operation = op;
 					state.pathLength = this.pathLength + 1;
-				}		
+				}
+				else
+					return null;
 				break;
 			case MOVERIGHT:
 				if(column + 1 < dim && this.isEmpty(row, column + 1)) {
@@ -116,7 +118,9 @@ public class SimplePuzzleState implements PuzzleState {
 					state.parent = this;
 					state.operation = op;
 					state.pathLength = this.pathLength + 1;
-				}		
+				}	
+				else
+					return null;
 				break;
 		}
 		return state;
@@ -124,7 +128,10 @@ public class SimplePuzzleState implements PuzzleState {
 
 	@Override
 	public PuzzleState drag(int startRow, int startColumn, int endRow, int endColumn) {
-		// TODO Auto-generated method stub
+		if(this.isEmpty(startRow, startColumn))
+			return null;
+		if(this.isEmpty(endRow, endColumn) != true)
+			return null;
 		return null;
 	}
 
