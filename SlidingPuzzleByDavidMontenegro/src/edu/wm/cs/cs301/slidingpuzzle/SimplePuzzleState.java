@@ -2,17 +2,30 @@ package edu.wm.cs.cs301.slidingpuzzle;
 
 public class SimplePuzzleState implements PuzzleState {
 	
+	private int[][] board;
 	private PuzzleState parent;
 	private Operation operation;
 	private int pathLength;
 	
 	public SimplePuzzleState() {
+		this.board = null;
 		this.parent = null;
 		this.operation = null;
+		this.pathLength = 0;
 	}
 	
 	@Override
 	public void setToInitialState(int dimension, int numberOfEmptySlots) {
+		this.board = new int[dimension][dimension];
+		int slot = 0;
+		for (int i = 0; i < dimension; i++) {
+			for (int j = 0; j < dimension; j++) {
+				slot = slot + 1;
+				this.board[i][j] = slot;
+				if(i == (dimension - 1) && j >= (dimension - numberOfEmptySlots))
+					this.board[i][j] = 0; 
+			}
+		}
 		this.parent = null;
 		this.operation = null;
 		this.pathLength = 0;
@@ -20,8 +33,7 @@ public class SimplePuzzleState implements PuzzleState {
 
 	@Override
 	public int getValue(int row, int column) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.board[row][column];
 	}
 	
 	public void setParent(PuzzleState parent) {
@@ -67,7 +79,8 @@ public class SimplePuzzleState implements PuzzleState {
 
 	@Override
 	public boolean isEmpty(int row, int column) {
-		// TODO Auto-generated method stub
+		if(this.board[row][column] == 0)
+			return true;
 		return false;
 	}
 
