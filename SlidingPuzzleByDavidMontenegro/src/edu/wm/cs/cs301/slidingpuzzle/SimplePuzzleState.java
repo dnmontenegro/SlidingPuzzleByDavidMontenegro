@@ -4,6 +4,7 @@ public class SimplePuzzleState implements PuzzleState {
 	
 	private PuzzleState parent;
 	private Operation operation;
+	private int pathLength;
 	
 	public SimplePuzzleState() {
 		this.parent = null;
@@ -14,6 +15,7 @@ public class SimplePuzzleState implements PuzzleState {
 	public void setToInitialState(int dimension, int numberOfEmptySlots) {
 		this.parent = null;
 		this.operation = null;
+		this.pathLength = 0;
 	}
 
 	@Override
@@ -42,8 +44,7 @@ public class SimplePuzzleState implements PuzzleState {
 
 	@Override
 	public int getPathLength() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.pathLength;
 	}
 
 	@Override
