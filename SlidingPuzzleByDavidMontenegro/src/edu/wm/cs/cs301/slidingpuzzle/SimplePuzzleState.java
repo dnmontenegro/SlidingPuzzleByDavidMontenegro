@@ -1,11 +1,19 @@
 package edu.wm.cs.cs301.slidingpuzzle;
 
 public class SimplePuzzleState implements PuzzleState {
-
+	
+	private PuzzleState parent;
+	private Operation operation;
+	
+	public SimplePuzzleState() {
+		this.parent = null;
+		this.operation = null;
+	}
+	
 	@Override
 	public void setToInitialState(int dimension, int numberOfEmptySlots) {
-		// TODO Auto-generated method stub
-
+		this.parent = null;
+		this.operation = null;
 	}
 
 	@Override
@@ -13,17 +21,23 @@ public class SimplePuzzleState implements PuzzleState {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
+	
+	public void setParent(PuzzleState parent) {
+		this.parent = parent;
+	}
+	
 	@Override
 	public PuzzleState getParent() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.parent;
 	}
 
+	public void setOperation(Operation operation) {
+		this.operation = operation;
+	}
+	
 	@Override
 	public Operation getOperation() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.operation;
 	}
 
 	@Override
