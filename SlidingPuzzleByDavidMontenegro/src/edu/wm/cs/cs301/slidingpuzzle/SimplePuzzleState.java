@@ -1,5 +1,7 @@
 package edu.wm.cs.cs301.slidingpuzzle;
 
+import java.util.Arrays;
+
 public class SimplePuzzleState implements PuzzleState {
 	
 	private int[][] board;
@@ -88,6 +90,24 @@ public class SimplePuzzleState implements PuzzleState {
 	public PuzzleState getStateWithShortestPath() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public boolean equals(Object o) {
+		if(this == o)
+			return true;
+		if(o == null || o.getClass() != this.getClass())
+			return false;
+		SimplePuzzleState state = (SimplePuzzleState) o;
+		return this.pathLength == state.pathLength && this.operation == state.operation 
+				&& this.parent == state.parent && Arrays.deepEquals(this.board, state.board);
+	}
+	
+	public int hashCode() {
+		int hash = 3;
+		hash = 31 * hash + this.pathLength;
+		hash = 31 * hash + ((this.parent == null) ? 0 : this.parent.hashCode());
+		hash = 31 * hash + ((this.operation == null) ? 0 : this.operation.hashCode());
+		return hash;
 	}
 
 }
