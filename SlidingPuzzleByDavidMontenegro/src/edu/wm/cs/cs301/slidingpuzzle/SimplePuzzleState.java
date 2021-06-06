@@ -16,6 +16,13 @@ public class SimplePuzzleState implements PuzzleState {
 		this.pathLength = 0;
 	}
 	
+	public SimplePuzzleState(int boardLength) {
+		this.board = new int[boardLength][boardLength];
+		this.parent = null;
+		this.operation = null;
+		this.pathLength = 0;
+	}
+	
 	@Override
 	public void setToInitialState(int dimension, int numberOfEmptySlots) {
 		this.board = new int[dimension][dimension];
@@ -24,7 +31,7 @@ public class SimplePuzzleState implements PuzzleState {
 			for (int j = 0; j < dimension; j++) {
 				slot = slot + 1;
 				this.board[i][j] = slot;
-				if(i == (dimension - 1) && j >= (dimension - numberOfEmptySlots))
+				if(i == dimension - 1 && j >= dimension - numberOfEmptySlots)
 					this.board[i][j] = 0; 
 			}
 		}
@@ -38,8 +45,8 @@ public class SimplePuzzleState implements PuzzleState {
 		return this.board[row][column];
 	}
 	
-	public void setParent(PuzzleState parent) {
-		this.parent = parent;
+	public void setParent(PuzzleState par) {
+		this.parent = par;
 	}
 	
 	@Override
@@ -47,8 +54,8 @@ public class SimplePuzzleState implements PuzzleState {
 		return this.parent;
 	}
 
-	public void setOperation(Operation operation) {
-		this.operation = operation;
+	public void setOperation(Operation op) {
+		this.operation = op;
 	}
 	
 	@Override
@@ -63,8 +70,56 @@ public class SimplePuzzleState implements PuzzleState {
 
 	@Override
 	public PuzzleState move(int row, int column, Operation op) {
-		// TODO Auto-generated method stub
-		return null;
+		int dim = this.board.length;
+		SimplePuzzleState state = new SimplePuzzleState(dim);
+		for (int i = 0; i < dim; i++) {
+			for (int j = 0; j < dim; j++) {
+				state.board[i][j] = this.getValue(i,j);
+			}
+		}	
+		switch(op) {
+			case MOVEUP:
+				if(row - 1 >= 0 && this.isEmpty(row - 1, column)) {
+					int value = getValue(row, column);
+					state.board[row][column] = 0;
+					state.board[row-1][column] = value;
+					state.parent = this;
+					state.operation = op;
+					state.pathLength = this.pathLength + 1;
+				}		
+				break;
+			case MOVEDOWN:
+				if(row + 1 < dim && this.isEmpty(row + 1, column)) {
+					int value = getValue(row, column);
+					state.board[row][column] = 0;
+					state.board[row+1][column] = value;
+					state.parent = this;
+					state.operation = op;
+					state.pathLength = this.pathLength + 1;
+				}		
+				break;
+			case MOVELEFT:
+				if(column - 1 >= 0 && this.isEmpty(row, column - 1)) {
+					int value = getValue(row, column);
+					state.board[row][column] = 0;
+					state.board[row][column-1] = value;
+					state.parent = this;
+					state.operation = op;
+					state.pathLength = this.pathLength + 1;
+				}		
+				break;
+			case MOVERIGHT:
+				if(column + 1 < dim && this.isEmpty(row, column + 1)) {
+					int value = getValue(row, column);
+					state.board[row][column] = 0;
+					state.board[row][column+1] = value;
+					state.parent = this;
+					state.operation = op;
+					state.pathLength = this.pathLength + 1;
+				}		
+				break;
+		}
+		return state;
 	}
 
 	@Override
