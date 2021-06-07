@@ -130,12 +130,36 @@ public class SimplePuzzleState implements PuzzleState {
 
 	@Override
 	public PuzzleState drag(int startRow, int startColumn, int endRow, int endColumn) {
-		if(this.isEmpty(startRow, startColumn))
+		if(this.isEmpty(startRow, startColumn) || this.isEmpty(endRow, endColumn) != true)
 			return null;
-		if(this.isEmpty(endRow, endColumn) != true)
-			return null;
-		
-		return this;
+		SimplePuzzleState state = new SimplePuzzleState();
+		state = this;
+		int rowDifference = endRow - startRow;
+		int colDifference = endColumn - startColumn;
+		while(rowDifference != 0 || colDifference != 0) {
+			if(isEmpty(startRow-1, startColumn) && rowDifference < 0) {
+				state = (SimplePuzzleState) state.move(startRow, startColumn, Operation.MOVEUP);
+				rowDifference++;
+				startRow--;
+			}
+			if(isEmpty(startRow+1, startColumn) && rowDifference > 0) {
+				state = (SimplePuzzleState) state.move(startRow, startColumn, Operation.MOVEDOWN);
+				rowDifference--;
+				startRow++;
+			}
+			if(isEmpty(startRow, startColumn-1) && colDifference < 0) {
+				state = (SimplePuzzleState) state.move(startRow, startColumn, Operation.MOVELEFT);
+				colDifference++;
+				startColumn--;
+			}
+				
+			if(isEmpty(startRow, startColumn+1) && colDifference > 0) {
+				state = (SimplePuzzleState) state.move(startRow, startColumn, Operation.MOVERIGHT);
+				colDifference--;
+				startColumn++;
+			}
+		}
+		return state;
 	}
 
 	@Override
@@ -204,7 +228,8 @@ public class SimplePuzzleState implements PuzzleState {
 
 	@Override
 	public boolean isEmpty(int row, int column) {
-		if(this.board[row][column] == 0)
+		int dim = this.board.length;
+		if(row >= 0 && row < dim && column >= 0 && column < dim && this.board[row][column] == 0)
 			return true;
 		return false;
 	}
