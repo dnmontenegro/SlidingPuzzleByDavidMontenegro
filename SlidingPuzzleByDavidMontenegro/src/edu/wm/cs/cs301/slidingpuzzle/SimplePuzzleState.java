@@ -211,8 +211,7 @@ public class SimplePuzzleState implements PuzzleState {
 
 	@Override
 	public PuzzleState getStateWithShortestPath() {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 	
 	public boolean equals(Object o) {
@@ -221,15 +220,12 @@ public class SimplePuzzleState implements PuzzleState {
 		if(o == null || o.getClass() != this.getClass())
 			return false;
 		SimplePuzzleState state = (SimplePuzzleState) o;
-		return this.pathLength == state.pathLength && this.operation == state.operation 
-				&& this.parent == state.parent && Arrays.deepEquals(this.board, state.board);
+		return Arrays.deepEquals(this.board, state.board);
 	}
 	
 	public int hashCode() {
 		int hash = 3;
-		hash = 31 * hash + this.pathLength;
-		hash = 31 * hash + ((this.parent == null) ? 0 : this.parent.hashCode());
-		hash = 31 * hash + ((this.operation == null) ? 0 : this.operation.hashCode());
+		hash = 31 * hash + ((this.board == null) ? 0 : Arrays.deepHashCode(this.board));
 		return hash;
 	}
 
