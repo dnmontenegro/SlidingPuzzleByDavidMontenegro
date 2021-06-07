@@ -1,8 +1,7 @@
 package edu.wm.cs.cs301.slidingpuzzle;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.util.Arrays;
+import java.util.Random;
 
 public class SimplePuzzleState implements PuzzleState {
 	
@@ -31,7 +30,7 @@ public class SimplePuzzleState implements PuzzleState {
 		int slot = 0;
 		for (int i = 0; i < dimension; i++) {
 			for (int j = 0; j < dimension; j++) {
-				slot = slot + 1;
+				slot++;
 				this.board[i][j] = slot;
 				if(i == dimension - 1 && j >= dimension - numberOfEmptySlots)
 					this.board[i][j] = 0; 
@@ -44,7 +43,10 @@ public class SimplePuzzleState implements PuzzleState {
 
 	@Override
 	public int getValue(int row, int column) {
-		return this.board[row][column];
+		int dim = this.board.length;
+		if(row >= 0 && row < dim && column >= 0 && column < dim)
+			return this.board[row][column];
+		return -1;
 	}
 	
 	@Override
@@ -132,13 +134,72 @@ public class SimplePuzzleState implements PuzzleState {
 			return null;
 		if(this.isEmpty(endRow, endColumn) != true)
 			return null;
-		return null;
+		
+		return this;
 	}
 
 	@Override
 	public PuzzleState shuffleBoard(int pathLength) {
-		// TODO Auto-generated method stub
-		return null;
+		if(pathLength == 0)
+			return this;
+		SimplePuzzleState next = new SimplePuzzleState();
+		SimplePuzzleState old = this;
+		int i = 0;
+		while(i < pathLength) {
+			int[][] empties = new int[2][3]; 
+			int numberOfEmptySlots = 0;
+			int dim = old.board.length;
+			for (int j = 0; j < dim; j++) {
+				for (int k = 0; k < dim; k++) {
+					if(old.isEmpty(j, k)) {
+						empties[0][numberOfEmptySlots] = j;
+						empties[1][numberOfEmptySlots] = k;
+						numberOfEmptySlots++;
+					}
+				}
+			}	
+			Random generateRandom = new Random();
+			int randomEmptySlot = generateRandom.nextInt(numberOfEmptySlots);
+			int row = empties[0][randomEmptySlot];
+			int column = empties[1][randomEmptySlot];
+			int randomMoves = generateRandom.nextInt(4);
+			Operation op = null;
+			switch(randomMoves) {
+				case 0:
+					op = Operation.MOVEUP;
+					if(old.getValue(row+1, column) > 0) {
+						next = (SimplePuzzleState) old.move(row+1, column, op);
+						i++;
+						old = next;
+					}
+					break;
+				case 1:
+					op = Operation.MOVEDOWN;
+					if(old.getValue(row-1, column) > 0) {
+						next = (SimplePuzzleState) old.move(row-1, column, op);
+						i++;
+						old = next;
+					}
+					break;
+				case 2:
+					op = Operation.MOVELEFT;
+					if(old.getValue(row, column+1) > 0) {
+						next = (SimplePuzzleState) old.move(row, column+1, op);
+						i++;
+						old = next;
+					}
+					break;
+				case 3: 
+					op = Operation.MOVERIGHT;
+					if(old.getValue(row, column-1) > 0) {
+						next = (SimplePuzzleState) old.move(row, column-1, op);
+						i++;
+						old = next;
+					}
+					break;
+			}
+		}
+		return next;
 	}
 
 	@Override
